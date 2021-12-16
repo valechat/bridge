@@ -1,6 +1,6 @@
-#[cfg(feature = "plugins")]
+#[cfg(feature = "util")]
 pub mod util;
-#[cfg(feature = "plugins")]
+#[cfg(feature = "util")]
 pub use util::*;
 
 #[cfg(feature = "plugins")]
