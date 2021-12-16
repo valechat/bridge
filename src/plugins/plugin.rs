@@ -1,6 +1,5 @@
 use std::ops::Deref;
-use std::sync::Arc;
-use rhai::{AST, Engine, EvalAltResult, Module, Scope};
+use rhai::{AST, Engine, EvalAltResult, Scope};
 
 #[cfg(feature = "events")]
 use crate::{Event, EventHandler, PluginFunctionArgs};

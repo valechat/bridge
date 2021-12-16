@@ -1,5 +1,8 @@
+use std::fmt::Formatter;
 use std::sync::atomic::{AtomicI64, Ordering};
 use chrono::{DateTime, TimeZone, Utc};
+use serde::{Serialize, Deserialize, Serializer, Deserializer};
+use serde::de::{Visitor};
 
 pub const EPOCH: i64 = 1420070400000;
 const TIMESTAMP_OFFSET: i64 = 22;
@@ -75,5 +78,59 @@ impl From<DateTime<Utc>> for Snowflake {
 impl Into<DateTime<Utc>> for Snowflake {
     fn into(self) -> DateTime<Utc> {
         self.timestamp()
+    }
+}
+
+struct SnowflakeVisitor;
+
+impl<'de> Visitor<'de> for SnowflakeVisitor {
+    type Value = i64;
+
+    fn expecting(&self, formatter: &mut Formatter) -> std::fmt::Result {
+        formatter.write_str("a snowflake as an integer")
+    }
+
+    fn visit_i8<E>(self, v: i8) -> Result<Self::Value, E> where E: serde::de::Error {
+        Ok(i64::from(v))
+    }
+
+    fn visit_i16<E>(self, v: i16) -> Result<Self::Value, E> where E: serde::de::Error {
+        Ok(i64::from(v))
+    }
+
+    fn visit_i32<E>(self, v: i32) -> Result<Self::Value, E> where E: serde::de::Error {
+        Ok(i64::from(v))
+    }
+
+    fn visit_i64<E>(self, v: i64) -> Result<Self::Value, E> where E: serde::de::Error {
+        Ok(v)
+    }
+
+    fn visit_u8<E>(self, v: u8) -> Result<Self::Value, E> where E: serde::de::Error {
+        Ok(i64::from(v))
+    }
+
+    fn visit_u16<E>(self, v: u16) -> Result<Self::Value, E> where E: serde::de::Error {
+        Ok(i64::from(v))
+    }
+
+    fn visit_u32<E>(self, v: u32) -> Result<Self::Value, E> where E: serde::de::Error {
+        Ok(i64::from(v))
+    }
+}
+
+impl Serialize for Snowflake {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error> where S: Serializer {
+        serializer.serialize_i64(self.value)
+    }
+}
+
+impl<'de> Deserialize<'de> for Snowflake {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let value = deserializer.deserialize_i64(SnowflakeVisitor)?;
+        Ok(Self::from(value))
     }
 }
