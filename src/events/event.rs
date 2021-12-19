@@ -1,36 +1,5 @@
-use std::ops::{Deref, DerefMut};
+pub type EventResult = Result<(), String>;
 
-#[derive(Clone)]
-pub struct Event<'a, E> {
-    pub name: &'a str,
-    inner: E
-}
-
-impl<'a, E> Event<'a, E> {
-    pub fn new(name: &'a str, inner: E) -> Self {
-        Self {
-            name,
-            inner
-        }
-    }
-}
-
-impl<E> Event<'_, E> {
-    pub fn into_inner(self) -> E {
-        self.inner
-    }
-}
-
-impl<E> Deref for Event<'_, E> {
-    type Target = E;
-
-    fn deref(&self) -> &Self::Target {
-        &self.inner
-    }
-}
-
-impl<E> DerefMut for Event<'_, E> {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.inner
-    }
+pub trait Dispatchable: Send + Sync + Clone {
+    fn get_name(&self) -> &'static str;
 }

@@ -10,7 +10,7 @@ impl TowerClient {
     pub fn new(url: String, client: Option<Client>) -> Self {
         Self {
             url,
-            client: client.unwrap_or(Client::new())
+            client: client.unwrap_or_default()
         }
     }
 

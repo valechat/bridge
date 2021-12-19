@@ -56,9 +56,9 @@ impl Snowflake {
     }
 }
 
-impl Into<i64> for Snowflake {
-    fn into(self) -> i64 {
-        self.value
+impl From<Snowflake> for i64 {
+    fn from(snowflake: Snowflake) -> Self {
+        snowflake.value
     }
 }
 
@@ -75,9 +75,9 @@ impl From<DateTime<Utc>> for Snowflake {
     }
 }
 
-impl Into<DateTime<Utc>> for Snowflake {
-    fn into(self) -> DateTime<Utc> {
-        self.timestamp()
+impl From<Snowflake> for DateTime<Utc> {
+    fn from(snowflake: Snowflake) -> Self {
+        snowflake.timestamp()
     }
 }
 
